@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration - ASCII</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .form-container { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 3rem; box-shadow: 0 10px 40px rgba(0,0,0,0.04); margin-bottom: 2rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-main); font-size: 0.95rem; }
+        .form-control { width: 100%; padding: 12px 15px; border: 1px solid var(--card-border); border-radius: 8px; background: var(--bg-color); color: var(--text-main); font-family: inherit; transition: var(--transition); }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1); }
+        .member-section { background: var(--bg-color); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--card-border); }
+        .member-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+        .remove-btn { background: #ff4757; color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        @media(max-width: 768px) { .form-row { grid-template-columns: 1fr; } }
+        .add-member-btn { background: transparent; border: 2px dashed var(--primary); color: var(--primary); padding: 12px; width: 100%; border-radius: 12px; font-weight: 600; cursor: pointer; transition: var(--transition); margin-bottom: 2rem;}
+        .add-member-btn:hover { background: rgba(0, 184, 148, 0.05); }
+
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: var(--transition); }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: var(--card-bg); width: 90%; max-width: 420px; border-radius: 20px; padding: 2.5rem; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.15); border: 1px solid var(--card-border); transform: translateY(20px) scale(0.95); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+        .modal-icon { font-size: 4rem; color: var(--primary); margin-bottom: 1.5rem; }
+        .modal-content h2 { font-family: 'Space Grotesk', sans-serif; margin-bottom: 1rem; color: var(--text-main); font-size: 1.8rem; }
+        .modal-content p { color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6; font-size: 1.05rem; }
+        .modal-btn { background-color: var(--primary); color: white; border: none; padding: 14px 35px; border-radius: 50px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition); text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3); }
+        .modal-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4); }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="grid-background"></div>
+    <nav class="navbar">
+       <div class="logo">
+            <!-- <img src="/images/ASCII.jpeg" alt=""> -->
+            <img src="/images/ASCII.jpeg" alt="">
+            <span>ASCII <span class="version">2025-26</span></span>
+        </div>
+       <ul class="nav-links">
+        <li><a href="index.html" >HOME</a></li>
+        <li><a href="index.html#event">EVENTS</a></li>
+        <li><a href="register.html" class="active">REGISTER</a></li>
+        <li><a href="team.html">TEAM</a></li>
+        <li><a href="contact.html">CONTACT US</a></li>
+    </ul>
+        <div class="nav-actions">
+            <!-- Back button visually -->
+            <a href="index.html" class="btn-primary" style="text-decoration: none;">&larr; BACK</a>
+        </div>
+    </nav>
+
+    <main class="container" style="max-width: 800px; padding-top: 2rem;">
+        <div class="hero" style="margin-bottom: 2rem;">
+            <h1 id="heroTitle" style="font-size: 3rem;">Event Registration</h1>
+            <p>Fill out the details below as per your corresponding team size.</p>
+        </div>
+
+        <div class="form-container">
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label class="form-label">Select Event</label>
+                    <select id="eventSelect" class="form-control" required style="font-weight: 600;">
+                        <option value="">-- Choose an Event --</option>
+                        <option value="quiz">Quiz Competition (Individual)</option>
+                        <option value="reverse_engineering">Reverse Engineering (Max: 2 Members)</option>
+                        <option value="chatbot">AI Chatbot Challenge (Max: 2 Members)</option>
+                        <option value="volleyball">Volleyball (Max: 8 Members)</option>
+                        <option value="badminton">Badminton (Individual)</option>
+                        <option value="chess">Chess - Boys (Individual)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="teamNameGroup" style="display: none;">
+                    <label class="form-label">Team Name</label>
+                    <input type="text" id="teamName" class="form-control" placeholder="Enter awesome team name">
+                </div>
+
+                <div id="membersContainer">
+                    <!-- Dynamic member forms will appear here -->
+                </div>
+
+                <button type="button" id="btnAddMember" class="add-member-btn" style="display: none;">
+                    <i class="fa-solid fa-plus"></i> Add Team Member
+                </button>
+
+                <button type="submit" class="btn-primary btn-large" style="width: 100%;">Submit Registration</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h2 id="modalTitle">Registration Successful!</h2>
+            <p id="modalMessage">Your team is registered.</p>
+            <button id="modalCloseBtn" class="modal-btn">Continue</button>
+        </div>
+    </div>
+
+    <script src="particles.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyCXuP3-yrGF8c1nwQuuewAKJy_SSIi0a3I",
+          authDomain: "ascii-full-website.firebaseapp.com",
+          projectId: "ascii-full-website",
+          storageBucket: "ascii-full-website.firebasestorage.app",
+          messagingSenderId: "677808608505",
+          appId: "1:677808608505:web:9fdfe11645ea71e56b7e28",
+          measurementId: "G-GGJYCSRT7T"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Use consistent theme
+        document.body.dataset.theme = localStorage.getItem('site-theme') || 'light';
+
+        const eventConfigs = {
+            'quiz': { max: 1 },
+            'reverse_engineering': { max: 2 },
+            'chatbot': { max: 2 },
+            'volleyball': { max: 8 },
+            'badminton': { max: 1 },
+            'chess': { max: 1 }
+        };
+
+        const eventSelect = document.getElementById('eventSelect');
+        const membersContainer = document.getElementById('membersContainer');
+        const btnAddMember = document.getElementById('btnAddMember');
+        const teamNameGroup = document.getElementById('teamNameGroup');
+        const teamNameInput = document.getElementById('teamName');
+        let memberCount = 0;
+
+        // Auto-select event from URL query
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventParam = urlParams.get('event');
+        if (eventParam && eventConfigs[eventParam]) {
+            eventSelect.value = eventParam;
+        }
+
+        function createMemberSection(index, isLeader = false) {
+            const evt = eventSelect.value;
+            const isChatbot = (evt === 'chatbot');
+
+            const div = document.createElement('div');
+            div.className = 'member-section';
+            div.id = `member-${index}`;
+            
+            let headerHTML = `<div class="member-header">
+                <span>${isLeader ? 'Team Captain (Member 1)' : `Member ${index}`}</span>
+                ${!isLeader ? `<button type="button" class="remove-btn" onclick="removeMember(${index})"><i class="fa-solid fa-trash"></i> Remove</button>` : ''}
+            </div>`;
+
+            let departmentHTML = '';
+            if (isChatbot) {
+                departmentHTML = `
+                    <div class="form-group">
+                        <label class="form-label">Department</label>
+                        <select class="form-control" required>
+                            <option value="">Select Department</option>
+                            <option value="Computer Engineering">Computer Engineering</option>
+                            <option value="IT">IT</option>
+                            <option value="ECE">ECE</option>
+                            <option value="AIDS">AIDS</option>
+                            <option value="CIVIL">CIVIL</option>
+                            <option value="CHEMICAL">CHEMICAL</option>
+                            <option value="MECHANICAL">MECHANICAL</option>
+                            <option value="INSTRU">INSTRU</option>
+                            <option value="ROBOTICS">ROBOTICS</option>
+                            <option value="E&TC">E&TC</option>
+                        </select>
+                    </div>`;
+            } else {
+                departmentHTML = `
+                    <div class="form-group" style="display: none;">
+                        <input type="hidden" class="form-control" value="Computer Engineering">
+                    </div>`;
+            }
+
+            div.innerHTML = `
+                ${headerHTML}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" required placeholder="Enter full name">
+                    </div>
+                    ${departmentHTML}
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Email ID</label>
+                        <input type="email" class="form-control" required placeholder="example@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contact Number</label>
+                        <input type="tel" class="form-control" required placeholder="10-digit number" pattern="[0-9]{10}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Gender</label>
+                        <select class="form-control" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Year of Study</label>
+                        <select class="form-control" required>
+                            <option value="">Select Year</option>
+                            <option value="FE">First Year (FE)</option>
+                            <option value="SEA">Second Year (SE-A)</option>
+                            <option value="SEB">Second Year (SE-B)</option>
+                            <option value="TE">Third Year (TE)</option>
+                            <option value="BE">Final Year (BE)</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        function updateForm() {
+            const evt = eventSelect.value;
+            if (!evt) {
+                membersContainer.innerHTML = '';
+                btnAddMember.style.display = 'none';
+                memberCount = 0;
+                return;
+            }
+
+            const config = eventConfigs[evt];
+            const max = config.max;
+
+            // Handle Team Name Visibility
+            if (['reverse_engineering', 'chatbot', 'volleyball'].includes(evt)) {
+                teamNameGroup.style.display = 'block';
+                teamNameInput.required = true;
+            } else {
+                teamNameGroup.style.display = 'none';
+                teamNameInput.required = false;
+                teamNameInput.value = '';
+            }
+
+            // Reset if switching events
+            membersContainer.innerHTML = '';
+            memberCount = 1;
+            membersContainer.appendChild(createMemberSection(1, true));
+
+            updateAddButtonState(max);
+        }
+
+        function updateAddButtonState(maxLimit) {
+            if (memberCount < maxLimit) {
+                btnAddMember.style.display = 'block';
+            } else {
+                btnAddMember.style.display = 'none';
+            }
+        }
+
+        btnAddMember.addEventListener('click', () => {
+            const evt = eventSelect.value;
+            if (!evt) return;
+            const max = eventConfigs[evt].max;
+
+            if (memberCount < max) {
+                memberCount++;
+                membersContainer.appendChild(createMemberSection(memberCount));
+                updateAddButtonState(max);
+            }
+        });
+
+        window.removeMember = function(index) {
+            const el = document.getElementById(`member-${index}`);
+            if (el) {
+                el.remove();
+                memberCount--;
+                
+                // Re-index remaining members to maintain order UI properly
+                const sections = membersContainer.querySelectorAll('.member-section');
+                let newCount = 1;
+                sections.forEach((sec, idx) => {
+                    const isLeader = (idx === 0);
+                    const headerSpan = sec.querySelector('.member-header span');
+                    headerSpan.innerText = isLeader ? 'Team Captain (Member 1)' : `Member ${newCount}`;
+                    
+                    if(!isLeader) {
+                        const newIndex = newCount;
+                        sec.id = `member-${newIndex}`;
+                        sec.querySelector('.remove-btn').setAttribute('onclick', `removeMember(${newIndex})`);
+                    }
+                    newCount++;
+                });
+
+                const evt = eventSelect.value;
+                const max = eventConfigs[evt];
+                updateAddButtonState(max ? max.max : 0);
+            }
+        };
+
+        eventSelect.addEventListener('change', () => {
+            // Update URL context optionally
+            const url = new URL(window.location);
+            url.searchParams.set('event', eventSelect.value);
+            window.history.pushState({}, '', url);
+            updateForm();
+        });
+
+        // Initial setup
+        if (eventSelect.value) {
+            updateForm();
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Registering...";
+            submitBtn.disabled = true;
+
+            try {
+                const eventName = eventSelect.value;
+                const members = [];
+                
+                const sections = membersContainer.querySelectorAll('.member-section');
+                sections.forEach((sec) => {
+                    const inputs = sec.querySelectorAll('.form-control');
+                    members.push({
+                        fullName: inputs[0].value,
+                        department: inputs[1].value,
+                        email: inputs[2].value,
+                        contact: inputs[3].value,
+                        gender: inputs[4].value,
+                        year: inputs[5].value
+                    });
+                });
+
+                await addDoc(collection(db, "registrations"), {
+                    event: eventName,
+                    teamName: teamNameInput.value || null,
+                    teamSize: members.length,
+                    members: members,
+                    timestamp: serverTimestamp()
+                });
+
+                // Display stylish success modal based on team logic
+                let successMessage = "";
+                if (members.length > 1) {
+                    successMessage = "Your team is registered successfully. Best of luck!";
+                } else {
+                    const firstName = members[0].fullName.split(' ')[0] || "Participant";
+                    successMessage = `${firstName}, your registration is confirmed! Best of luck!`;
+                }
+
+                document.getElementById('modalMessage').innerText = successMessage;
+                const modal = document.getElementById('successModal');
+                modal.classList.add('active');
+
+                document.getElementById('modalCloseBtn').addEventListener('click', () => {
+                    window.location.href = 'index.html';
+                });
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert('Registration failed due to an error: ' + error.message);
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+
+        //timer 
+       
+const targetDate = new Date("April 10, 2026 10:00:00").getTime();
+
+const countdown = setInterval(() => {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+        clearInterval(countdown);
+        document.querySelector(".countdown").innerHTML = "🚀 Event Started!";
+        return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("days").innerText = days;
+    document.getElementById("hours").innerText = hours;
+    document.getElementById("minutes").innerText = minutes;
+    document.getElementById("seconds").innerText = seconds;
+
+}, 1000);
+
+    </script>
+    <script src="particles.js"></script>
+</body>
+</html>

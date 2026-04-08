@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - ASCII Committee</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="grid-background"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+   <div class="logo">
+            <!-- <img src="/images/ASCII.jpeg" alt=""> -->
+            <img src="/images/ASCII.jpeg" alt="">
+            <span>ASCII <span class="version">2025-26</span></span>
+        </div>
+
+    <ul class="nav-links">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="index.html#sidebar-title">EVENTS</a></li>
+        <li><a href="register.html">REGISTER</a></li>
+        <li><a href="team.html">TEAM</a></li>
+        <li><a href="contact.html" class="active">CONTACT US</a></li>
+    </ul>
+
+    <div class="nav-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle Dark Mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <a href="register.html" class="btn-primary" style="text-decoration: none; display: inline-block; line-height: normal;">REGISTER NOW</a>
+            <div class="menu-toggle" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+</nav>
+
+<!-- MAIN -->
+<main class="container">
+
+    <!-- HERO -->
+    <header class="hero">
+        <h1>Contact Us</h1>
+        <p>We’re here to help you with TechFest & Events</p>
+    </header>
+
+    <!-- CONTACT LAYOUT -->
+    <div class="contact-layout">
+
+       
+        
+
+        <!-- LEFT: FORM -->
+        <form id="contactForm" class="contact-form">
+
+            <h2 class="section-title">SEND A MESSAGE</h2>
+
+            <div class="form-group">
+                <input type="text" name="user_name" placeholder="Full Name" required>
+                <input type="email" name="user_email" placeholder="Email Address" required>
+            </div>
+
+            <select name="subject" class="form-select">
+                <option value="General">Select Query Type</option>
+                <option value="Event Related">Event Related</option>
+                <option value="Registration">Registration</option>
+                <option value="Technical Issue">Technical Issue</option>
+                <option value="Something Else">Something Else</option>
+            </select>
+
+            <textarea name="message" placeholder="Tell us how we can help..." required></textarea>
+
+            <button type="submit" class="btn-primary btn-large">
+                Send Message
+            </button>
+
+        </form>
+         <!-- Right: CONTACT INFO -->
+
+        <div class="contact-info">
+
+            <div class="info-card">
+                <h3><i class="fa-solid fa-envelope"></i> Email Support</h3>
+                <p>ascii@pravaraengg.org.in</p>
+            </div>
+
+            <div class="info-card">
+                <h3><i class="fa-solid fa-phone"></i> Helpline</h3>
+                <p>+91 8626092048</p>
+                <p>+91 8329800649</p> 
+            </div>
+
+            <div class="info-card">
+                <h3><i class="fa-solid fa-location-dot"></i> Location</h3>
+                <p>Pravara Rural Engineering College<br>Loni, Maharashtra</p>
+            </div>
+
+        </div>
+
+    </div>
+
+  
+
+<!-- EMAILJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+(function(){
+    emailjs.init("jtYVamYtqFWXdt8Lo"); 
+})();
+
+document.getElementById("contactForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const btn = document.querySelector(".btn-primary");
+    btn.innerText = "Sending...";
+
+    emailjs.sendForm("service_r0fs3wx", "template_7xu30zn", this)
+    .then(() => {
+        btn.innerText = "Sent ✅";
+        this.reset();
+    })
+    .catch((error) => {
+        btn.innerText = "Try Again ❌";
+        console.log(error);
+    });
+});
+
+</script>
+<script src="particles.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
